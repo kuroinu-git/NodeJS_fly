@@ -35,7 +35,7 @@ module.exports = () => {
 
     route.post('/', (req, res, next) => {
         const body = req.body;
-        const accesToken = jwt.sign(body, "asdasdsadasdasdaszxc")
+        const accesToken = jwt.sign(body, "asdasdsadasdasdaszxc", {expiresIn: '1m'})
         console.log('post user');
         res.status(201).send({
             ...body,
@@ -43,7 +43,18 @@ module.exports = () => {
         });
         next();// จะส่ง parameter req ไปที่ app.use console.log("success"); 
     // ถ้า next() ที่ตัวนี้ จะทำตัวล่าง
-});
+    });
+    
+    route.post('/login', (req, res, next) => {
+        const token = req.headers["x-auth-token"];
+        try {
+            const decode = jwt.verify(token, "asdasdsadasdasdaszxc");
+            res.status(200).send(decode);
+        } catch (err) {
+            res.sendStatus(401); 
+        }
+    });
+
 return route;
 
 }
