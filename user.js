@@ -1,6 +1,6 @@
 const { Router } = require("express");
-const { logMiddleware1 } = require("./middleware");
-
+const {logMiddleware1} = require("./middleware");
+const jwt = require("jsonwebtoken");
 
 
 module.exports = () => {
@@ -33,9 +33,14 @@ module.exports = () => {
 
 
 
-    route.post('/',(req, res, next) => {
+    route.post('/', (req, res, next) => {
+        const body = req.body;
+        const accesToken = jwt.sign(body, "asdasdsadasdasdaszxc")
         console.log('post user');
-        res.sendStatus(201);
+        res.status(201).send({
+            ...body,
+            accesToken
+        });
         next();// จะส่ง parameter req ไปที่ app.use console.log("success"); 
     // ถ้า next() ที่ตัวนี้ จะทำตัวล่าง
 });
