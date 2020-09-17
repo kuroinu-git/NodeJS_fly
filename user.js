@@ -35,11 +35,12 @@ module.exports = () => {
 
     route.post('/', (req, res, next) => {
         const body = req.body;
-        const accesToken = jwt.sign(body, "asdasdsadasdasdaszxc", {expiresIn: '1m'})
+        const accesToken = jwt.sign(body, process.env.SECRET_KEY , {expiresIn: '1m'}) //  process.env.SECRET_KEY => "asdasdsadasdasdaszxc"
         console.log('post user');
-        res.status(201).send({
+        res.status(201).send({  // send ออกมา จะเห็น
             ...body,
-            accesToken
+            accesToken,
+           // secretKey: process.env.SECRET_KEY
         });
         next();// จะส่ง parameter req ไปที่ app.use console.log("success"); 
     // ถ้า next() ที่ตัวนี้ จะทำตัวล่าง
@@ -48,7 +49,7 @@ module.exports = () => {
     route.post('/login', (req, res, next) => {
         const token = req.headers["x-auth-token"];
         try {
-            const decode = jwt.verify(token, "asdasdsadasdasdaszxc");
+            const decode = jwt.verify(token, "asdasdsadasdasdaszxc"); //evtroment ไม่ควร  code เดียวกัน
             res.status(200).send(decode);
         } catch (err) {
             res.sendStatus(401); 
