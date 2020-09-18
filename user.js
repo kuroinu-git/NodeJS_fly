@@ -7,15 +7,15 @@ module.exports = () => {
     const route = Router();
     route.use(logMiddleware1);
     // แบบที่ context
-    route.get('/',(req, res, next) => {
-        console.log('get user');
-        const userId = req.query.userId;
+    // route.get('/',(req, res, next) => {
+    //     console.log('get user');
+    //     const userId = req.query.userId;
         
-        res.status(201).send({
-            userId: userId
-        });
-        next(new Error('')); // จะส่ง error ไป เรียก app.use ใน พารามิเตอร์ตัวแรก
-    });
+    //     res.status(201).send({
+    //         userId: userId
+    //     });
+    //     next(new Error('')); // จะส่ง error ไป เรียก app.use ใน พารามิเตอร์ตัวแรก
+    // });
     // http://localhost:3000/user?userId=111 ใช้ใน insomnia
 
     // แบบที่ query string
@@ -35,12 +35,12 @@ module.exports = () => {
 
     route.post('/', (req, res, next) => {
         const body = req.body;
-        const accesToken = jwt.sign(body, process.env.SECRET_KEY , {expiresIn: '1m'}) //  process.env.SECRET_KEY => "asdasdsadasdasdaszxc"
+        const accesToken = jwt.sign(body, "asdasdsadasdasdaszxc", {expiresIn: '1m'}) //  process.env.SECRET_KEY => "asdasdsadasdasdaszxc"
         console.log('post user');
         res.status(201).send({  // send ออกมา จะเห็น
             ...body,
             accesToken,
-           // secretKey: process.env.SECRET_KEY
+           secretKey: process.env.SECRET_KEY
         });
         next();// จะส่ง parameter req ไปที่ app.use console.log("success"); 
     // ถ้า next() ที่ตัวนี้ จะทำตัวล่าง
@@ -55,6 +55,14 @@ module.exports = () => {
             res.sendStatus(401); 
         }
     });
+
+    route.get('/', (req, res, next) => {
+        console.log('all authenticated user can access');        
+        res.sendStatus(201)
+        next(); // จะส่ง error ไป เรียก app.use ใน พารามิเตอร์ตัวแรก
+    });
+
+    
 
 return route;
 
